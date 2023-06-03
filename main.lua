@@ -16,5 +16,6 @@ function love.update(dt)
 end
 
 function love.draw()
+    love.graphics.scale(3, 3)
     myWindow:draw()
 end
