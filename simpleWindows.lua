@@ -1,2 +1,70 @@
---
---
+local function loadQuads(gw, gh, iw, ih)
+    local quads={top={}, middle={}, bottom={}}
+    local x,y=0,0
+    for i,v in pairs(quads) do
+        quads[i].left=love.graphics.newQuad(x, y, gw, gh, iw, ih)
+        x=x+gw
+        quads[i].center=love.graphics.newQuad(x, y, gw, gh, iw, ih)
+        x=x+gw
+        quads[i].right=love.graphics.newQuad(x, y, gw, gh, iw, ih)        
+        y=y+gh
+    end
+end
+
+function createSimpleWindow(name, image, x, y, w, h)
+    local graphic=love.graphics.newImage(image)
+    --get the graphic pieces/tiles for display and quads of the window
+    local gw, gh=math.floor(graphic:getWidth()/3), math.floor(graphic:getHeight()/3)
+    --the height here is the number of "tiles" to draw, so to speak. Same with width.
+    --the window width/height divided image width/height for the window graphic /3 (to get the corners, etc)
+    local ww, wh=math.floor(w/gw), math.floor(h/gh)
+    return {
+                name=name,
+                graphic=graphic,
+                imageName=image,
+                quads=loadQuads(gw, gw, ww, wh),
+                w=ww,
+                h=wh,
+                x=x,
+                y=y,
+                state="closed", --can be opening, closing, opened, closed.
+                open=function(self) end,
+                close=function(self) end,
+                isOpen=function(self) if self.state=="opened" then return true else return false end,
+                isClosed=function(self) if self.state=="closed" then return true else return false end,
+                isOpeing=function(self) if self.state=="opening" then return true else return false end,
+                isClosing=function(self) if self.state=="closing" then return true else return false end,
+                changeSize=function(self, w, h)
+                    --animate.
+                end,
+                getWindowImage=function(self)
+                    return {name=self.imageName, image=self.graphic}
+                end,
+                update=function(self, dt)
+
+                end,
+                drawRow=function(self, row)
+                    love.graphics.draw(self.graphic, row.left, self.x, self.y)
+                    for i=0, self.w do
+                        love.graphics.draw(self.graphic, row.center, self.x, self.y)
+                    end
+                    love.graphics.draw(self.graphic, row.right, self.x, self.y)
+                end,
+                draw=function(self)
+                    --draw the top.
+                    self:drawRow(self.quads.top)
+                    --draw the middle
+                    for i=0, self.h do
+                        self:drawRow(self.quads.middle)
+                    end                    
+                    --draw the bottom.
+                    self:drawRow(self.quads.bottom)
+                end,
+                changeGraphic=function(self, graphic)
+                    local gw, gh=math.floor(graphic:getWidth()/3), math.floor(graphic:getHeight()/3)
+                    self.graphic=love.graphics.newImage(graphic)
+                    self.w, self.h=math.floor(w/gw), math.floor(h/gh)
+                    self.quads=loadQuads(gw, gw, self.w, self.h),
+                end,
+    }
+end
