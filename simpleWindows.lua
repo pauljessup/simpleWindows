@@ -30,10 +30,10 @@ function createSimpleWindow(name, image, x, y, w, h)
                 state="closed", --can be opening, closing, opened, closed.
                 open=function(self) end,
                 close=function(self) end,
-                isOpen=function(self) if self.state=="opened" then return true else return false end,
-                isClosed=function(self) if self.state=="closed" then return true else return false end,
-                isOpeing=function(self) if self.state=="opening" then return true else return false end,
-                isClosing=function(self) if self.state=="closing" then return true else return false end,
+                isOpen=function(self) if self.state=="opened" then return true else return false end end,
+                isClosed=function(self) if self.state=="closed" then return true else return false end end,
+                isOpeing=function(self) if self.state=="opening" then return true else return false end end,
+                isClosing=function(self) if self.state=="closing" then return true else return false end end,
                 changeSize=function(self, w, h)
                     --animate.
                 end,
@@ -64,7 +64,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                     local gw, gh=math.floor(graphic:getWidth()/3), math.floor(graphic:getHeight()/3)
                     self.graphic=love.graphics.newImage(graphic)
                     self.w, self.h=math.floor(w/gw), math.floor(h/gh)
-                    self.quads=loadQuads(gw, gw, self.w, self.h),
+                    self.quads=loadQuads(gw, gw, self.w, self.h)
                 end,
     }
 end
