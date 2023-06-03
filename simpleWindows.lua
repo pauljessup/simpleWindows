@@ -40,7 +40,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 end,
                 close=function(self) 
                     self.state="closing"
-                    self.animate(-1)
+                    self:animate(-1)
                 end,
                 isOpen=function(self) if self.state=="open" then return true else return false end end,
                 isClosed=function(self) if self.state=="closed" then return true else return false end end,
