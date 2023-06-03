@@ -75,6 +75,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                     love.graphics.draw(self.graphic, row.right, self.x, self.y)
                 end,
                 draw=function(self)
+                    if self:isClosed() then return false end
                     local anim=self.animating
                     --draw the top.
                     self:drawRow(self.quads.top)
