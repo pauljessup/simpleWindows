@@ -28,7 +28,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 x=x,
                 y=y,
                 state="closed", --can be opening, closing, opened, closed.
-                animating={isAnimating=false, position={w=0, h=0}, direction=1} --direction is 1 or -1. -1 is closing, 1 is opening.
+                animating={isAnimating=false, position={w=0, h=0}, direction=1}, --direction is 1 or -1. -1 is closing, 1 is opening.
                 open=function(self) end,
                 close=function(self) end,
                 isOpen=function(self) if self.state=="opened" then return true else return false end end,
