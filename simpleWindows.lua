@@ -9,6 +9,7 @@ local function loadQuads(gw, gh, iw, ih)
         quads[i].right=love.graphics.newQuad(x, y, gw, gh, iw, ih)        
         y=y+gh
     end
+    return quads
 end
 
 function createSimpleWindow(name, image, x, y, w, h)
