@@ -27,6 +27,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 imageName=image,
                 quads=loadQuads(gw, gw, graphic:getWidth(), graphic:getHeight()),
                 tileSize={w=gw, h=gh},
+                middle={w=math.floor(w/2), h=math.floor(h/2)},  --get the center of the window
                 w=ww,
                 h=wh,
                 x=x,
@@ -81,18 +82,18 @@ function createSimpleWindow(name, image, x, y, w, h)
                         end
                     end
                 end,
-                --change drawing so instead of from upper left, out
-                --it goes from middle and expands.
                 drawRow=function(self, row, ypos)
                     local anim=self.animating
-                    love.graphics.draw(self.graphic, row.left, self.x, self.y+ypos)
+                    local xAt=self.x+((self.middle.w)-((anim.w*(self.tileSize.w/2)))) --calculate from center back, based on animation at.
+                    local yAt=self.y+((self.middle.h)-((anim.h*(self.tileSize.h/2)))) --do the same for height
+                    love.graphics.draw(self.graphic, row.left, xAt, yAt+ypos)
                     local xpos=0
                     for i=0, anim.w-1 do
                         xpos=xpos+self.tileSize.w
-                        love.graphics.draw(self.graphic, row.center, self.x+xpos, self.y+ypos)
+                        love.graphics.draw(self.graphic, row.center, xAt+xpos, yAt+ypos)
                     end
                     xpos=xpos+self.tileSize.w
-                    love.graphics.draw(self.graphic, row.right, self.x+xpos, self.y+ypos)
+                    love.graphics.draw(self.graphic, row.right, xAt+xpos, yAt+ypos)
                 end,
                 draw=function(self)
                     if self:isClosed() then return false end
