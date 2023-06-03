@@ -81,6 +81,8 @@ function createSimpleWindow(name, image, x, y, w, h)
                         end
                     end
                 end,
+                --change drawing so instead of from upper left, out
+                --it goes from middle and expands.
                 drawRow=function(self, row, ypos)
                     local anim=self.animating
                     love.graphics.draw(self.graphic, row.left, self.x, self.y+ypos)
