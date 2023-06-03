@@ -55,9 +55,6 @@ function createSimpleWindow(name, image, x, y, w, h)
                     self.animating.position={w=0, h=0}
                     self.animating.direction=direction
                 end,
-                changeSize=function(self, w, h)
-                    
-                end,
                 getWindowImage=function(self)
                     return {name=self.imageName, image=self.graphic}
                 end,
