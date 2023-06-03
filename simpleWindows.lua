@@ -22,6 +22,7 @@ function createSimpleWindow(name, image, x, y, w, h)
     --the window width/height divided image width/height for the window graphic /3 (to get the corners, etc)
     local ww, wh=math.floor(w/gw), math.floor(h/gh)
     return {
+                fade=0.0,
                 name=name,
                 graphic=graphic,
                 imageName=image,
@@ -49,6 +50,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 getAnimationSpeed=function(self) return self.animating.speed end,
                 setAnimationSpeed=function(self, amt) self.animating.speed=amt end,
                 animate=function(self, direction)
+                    self.fade=1.0
                     self.animating.isAnimating=true 
                     self.animating.position={w=0, h=0}
                     self.animating.direction=direction
@@ -63,6 +65,9 @@ function createSimpleWindow(name, image, x, y, w, h)
                     local anim=self.animating
                     if anim.isAnimating==true then
                         --TODO: add a cooldown here using dt so we can create variable speed open and close.
+                        self.fade=self.fade-0.04
+                        if self.fade<0.0 then self.fade=0.0 end
+
                         anim.w=anim.w+anim.direction
                         anim.h=anim.h+anim.direction
                         if anim.direction==1 then
@@ -96,7 +101,14 @@ function createSimpleWindow(name, image, x, y, w, h)
                     love.graphics.draw(self.graphic, row.right, xAt+xpos, yAt+ypos)
                 end,
                 draw=function(self)
+                    local col={}
                     if self:isClosed() then return false end
+                    if self.animating.isAnimating then
+                        col[1], col[2], col[3], col[4]=love.graphics.getColor()
+                        local fade=self.fade
+                        if self.animating.direction==1 then fade=1.0-self.fade end
+                        love.graphics.setColor(col[1], col[2], col[3], fade)
+                    end
                     local ypos=0
                     local anim=self.animating
                     --draw the top.
@@ -112,6 +124,9 @@ function createSimpleWindow(name, image, x, y, w, h)
                             else 
                                 self:drawRow(v, ypos)
                             end
+                    end
+                    if self.animating.isAnimating then
+                        love.graphics.setColor(col[1], col[2], col[3], col[4])
                     end
                 end,
                 changeGraphic=function(self, graphic)

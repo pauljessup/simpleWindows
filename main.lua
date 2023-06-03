@@ -9,10 +9,11 @@ function love.load()
     --the args- name, image, x, y, w, h ..name is whatever you want to name it, image is the image you'll use for the background
     --(an image that is divisible by 3 in both h and width, it can be of any size, but works best when divisible by 3. Look at examples included)
     --x y is the location, w and h is the w and h of the window itself in pixels.
-    myWindow=createSimpleWindow("test", "windowExample1.png", 10, 10, 200, 30)
+    myWindow=createSimpleWindow("test", "windowExample1.png", 10, 10, 200, 45)
     myWindow:open()
     coolDown=0.0 --for the keyboard, so it doesn't change a billion times.
     window=1
+    backgroundImage=love.graphics.newImage("Example3_0.png")
 end
 
 function love.update(dt)
@@ -23,13 +24,20 @@ function love.update(dt)
         myWindow:changeGraphic("windowExample" .. window ..".png")
         if window==3 then window=0 end
     end
+    if love.keyboard.isDown("escape") and myWindow:isOpen()==true then
+        myWindow:close()
+    end
     if coolDown>0.0 then coolDown=coolDown-0.1 else coolDown=0.0 end
 end
 
 function love.draw()
     love.graphics.scale(3, 3)
+    love.graphics.draw(backgroundImage)
     myWindow:draw()
     if myWindow:isOpen()==true then
         love.graphics.print("Press space to change window", 24, 24)
+        love.graphics.print("Press esc to close window", 24, 44)
     end
+
+    love.graphics.print("Background art by Ivan Voirol")
 end
