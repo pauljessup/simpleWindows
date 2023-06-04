@@ -1,5 +1,16 @@
 --all you need to do is require it, wherever you placed it.
 require("simpleWindows")
+---there are only a handful of functions you need. The rest of the example is just showing off, lol
+-- local window=createSimpleWindow returns a window to use
+-- window:update(dt) will update that window
+-- window:open() will open the window
+-- window:close() will close the window
+-- windor:draw() will draw the window
+-- window:isOpened() will check to see if it's opened
+-- window:isClosed() will check to see if it's closed
+-- window:changeGraphic() will change the image used as the background of the window
+-- that's it! Super simple stuff.
+
 love.graphics.setDefaultFilter("nearest","nearest")
 
 
