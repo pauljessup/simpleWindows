@@ -66,6 +66,7 @@ function createSimpleWindow(name, image, x, y, w, h, speed)
                     local gw, gh=math.floor(self.graphic:getWidth()/3), math.floor(self.graphic:getHeight()/3)
                     self.quads=loadQuads(gw, gh, self.graphic:getWidth(), self.graphic:getHeight())
                     self.tileSize={w=gw, h=gh}
+                    self.w, self.h=math.floor(w/gw), math.floor(h/gh)
                 end,
                 update=function(self, dt)
                     local anim=self.animating
