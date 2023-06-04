@@ -27,7 +27,7 @@ function createSimpleWindow(name, image, x, y, w, h, speed)
                 name=name,
                 graphic=graphic,
                 imageName=image,
-                quads=loadQuads(gw, gw, graphic:getWidth(), graphic:getHeight()),
+                quads=loadQuads(gw, gh, graphic:getWidth(), graphic:getHeight()),
                 tileSize={w=gw, h=gh},
                 middle={w=math.floor(w/2), h=math.floor(h/2)},  --get the center of the window
                 w=ww,
@@ -59,6 +59,13 @@ function createSimpleWindow(name, image, x, y, w, h, speed)
                 end,
                 getWindowImage=function(self)
                     return {name=self.imageName, image=self.graphic}
+                end,
+                changeGraphic=function(self, graphic)
+                    self.graphic=love.graphics.newImage(graphic)
+                    self.imageName=graphic
+                    local gw, gh=math.floor(self.graphic:getWidth()/3), math.floor(self.graphic:getHeight()/3)
+                    self.quads=loadQuads(gw, gh, self.graphic:getWidth(), self.graphic:getHeight())
+                    self.tileSize={w=gw, h=gh}
                 end,
                 update=function(self, dt)
                     local anim=self.animating
@@ -131,9 +138,6 @@ function createSimpleWindow(name, image, x, y, w, h, speed)
                     if self.animating.isAnimating then
                         love.graphics.setColor(col[1], col[2], col[3], col[4])
                     end
-                end,
-                changeGraphic=function(self, graphic)
-                    self.graphic=love.graphics.newImage(graphic)
                 end,
     }
 end
