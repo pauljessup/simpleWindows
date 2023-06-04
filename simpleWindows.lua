@@ -14,7 +14,8 @@ local function loadQuads(gw, gh, iw, ih)
     return quads
 end
 
-function createSimpleWindow(name, image, x, y, w, h)
+function createSimpleWindow(name, image, x, y, w, h, speed)
+    if speed==nil then speed=0.5 end
     local graphic=love.graphics.newImage(image)
     --get the graphic pieces/tiles for display and quads of the window
     local gw, gh=math.floor(graphic:getWidth()/3), math.floor(graphic:getHeight()/3)
@@ -34,7 +35,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 x=x,
                 y=y,
                 state="closed", --can be opening, closing, opened, closed.
-                animating={isAnimating=false, w=0, h=0, direction=1}, --direction is 1 or -1. -1 is closing, 1 is opening.
+                animating={isAnimating=false, w=0, h=0, direction=1, speed=speed, dtTimer=0.0}, --direction is 1 or -1. -1 is closing, 1 is opening.
                 open=function(self) 
                     self.state="opening"
                     self:animate(1)
@@ -51,6 +52,7 @@ function createSimpleWindow(name, image, x, y, w, h)
                 setAnimationSpeed=function(self, amt) self.animating.speed=amt end,
                 animate=function(self, direction)
                     self.fade=1.0
+                    self.animating.dtTimer=1.0
                     self.animating.isAnimating=true 
                     self.animating.position={w=0, h=0}
                     self.animating.direction=direction
@@ -61,26 +63,30 @@ function createSimpleWindow(name, image, x, y, w, h)
                 update=function(self, dt)
                     local anim=self.animating
                     if anim.isAnimating==true then
-                        --TODO: add a cooldown here using dt so we can create variable speed open and close.
-                        self.fade=self.fade-0.04
-                        if self.fade<0.0 then self.fade=0.0 end
+                        if anim.dtTimer>=1.0 then
+                                    anim.dtTimer=0.0
+                                    self.fade=self.fade-0.04
+                                    if self.fade<0.0 then self.fade=0.0 end
 
-                        anim.w=anim.w+anim.direction
-                        anim.h=anim.h+anim.direction
-                        if anim.direction==1 then
-                            if anim.w>self.w then anim.w=self.w end
-                            if anim.h>self.h then anim.h=self.h end
-                            if anim.h==self.h and anim.w==self.w then
-                                anim.isAnimating=false 
-                                if self:isOpening() then self.state="open" end
-                            end
+                                    anim.w=anim.w+anim.direction
+                                    anim.h=anim.h+anim.direction
+                                    if anim.direction==1 then
+                                        if anim.w>self.w then anim.w=self.w end
+                                        if anim.h>self.h then anim.h=self.h end
+                                        if anim.h==self.h and anim.w==self.w then
+                                            anim.isAnimating=false 
+                                            if self:isOpening() then self.state="open" end
+                                        end
+                                    else
+                                        if anim.w<0 then anim.w=0 end
+                                        if anim.h<0 then anim.h=0 end
+                                        if anim.h==0 and anim.w==0 then 
+                                            if self:isClosing() then self.state="closed" end
+                                            anim.isAnimating=false 
+                                        end
+                                    end
                         else
-                            if anim.w<0 then anim.w=0 end
-                            if anim.h<0 then anim.h=0 end
-                            if anim.h==0 and anim.w==0 then 
-                                if self:isClosing() then self.state="closed" end
-                                anim.isAnimating=false 
-                            end
+                            anim.dtTimer=anim.dtTimer+((anim.speed*200)*dt)
                         end
                     end
                 end,
