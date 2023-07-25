@@ -44,10 +44,10 @@ function createSimpleWindow(name, image, x, y, w, h, speed)
                     self.state="closing"
                     self:animate(-1)
                 end,
-                isOpen=function(self) if self.state=="open" then return true else return false end end,
-                isClosed=function(self) if self.state=="closed" then return true else return false end end,
-                isOpening=function(self) if self.state=="opening" then return true else return false end end,
-                isClosing=function(self) if self.state=="closing" then return true else return false end end,
+                isOpen=function(self) return self.state=="open" end,
+                isClosed=function(self) return self.state=="closed" end,
+                isOpening=function(self) return self.state=="opening" end,
+                isClosing=function(self) return self.state=="closing" end,
                 getAnimationSpeed=function(self) return self.animating.speed end,
                 setAnimationSpeed=function(self, amt) self.animating.speed=amt end,
                 animate=function(self, direction)
